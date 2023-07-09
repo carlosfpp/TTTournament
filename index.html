@@ -203,107 +203,266 @@
                             let allWinnersEntered = true;
 
                             winnerInputs.forEach(function (input) {
-                                if (input.value.trim() === '') {
+                                                                if (input.value.trim() === '') {
                                     allWinnersEntered = false;
                                     return;
                                 }
-                            if (input.value.trim() === '') {
-                                allWinnersEntered = false;
+                            });
+
+                            if (!allWinnersEntered) {
+                                alert('Debes ingresar el nombre del ganador para cada enfrentamiento.');
                                 return;
                             }
-                        });
 
-                        if (!allWinnersEntered) {
-                            alert('Debes ingresar el nombre del ganador para cada enfrentamiento.');
-                            return;
-                        }
+                            winnerInputs.forEach(function (input, index) {
+                                const winnerName = input.value.trim();
+                                const match = roundMatches[index];
 
-                        winnerInputs.forEach(function (input, index) {
-                            const winnerName = input.value.trim();
-                            const match = roundMatches[index];
+                                if (match[0].name === winnerName) {
+                                    match[0].victories++;
+                                    partidosGanados[match[0].name]++;
+                                } else if (match[1].name === winnerName) {
+                                    match[1].victories++;
+                                    partidosGanados[match[1].name]++;
+                                }
+                            });
 
-                            if (match[0].name === winnerName) {
-                                match[0].victories++;
-                                partidosGanados[match[0].name]++;
-                            } else if (match[1].name === winnerName) {
-                                match[1].victories++;
-                                partidosGanados[match[1].name]++;
+                            roundsDiv.innerHTML = '';
+                            rankingBody.innerHTML = '';
+
+                            if (ronda < roundCount) {
+                                for (let i = 0; i < ronda; i++) {
+                                    const roundHeader = document.createElement('h3');
+                                    roundHeader.textContent = 'Ronda ' + (ronda + i);
+                                    roundsDiv.appendChild(roundHeader);
+
+                                    const roundMatches = generarEnfrentamientos(players, partidosGanados, ronda + i);
+
+                                    const roundTable = document.createElement('table');
+                                    roundTable.innerHTML = '<tr><th>Jugador 1</th><th>Jugador 2</th><th>Ganador</th></tr>';
+
+                                    roundMatches.forEach((match) => {
+                                        const matchRow = document.createElement('tr');
+                                        matchRow.innerHTML = '<td>' + match[0].name + '</td><td>' + match[1].name + '</td>';
+
+                                        const winnerCell = document.createElement('td');
+                                        const winnerInput = document.createElement('input');
+                                        winnerInput.setAttribute('type', 'text');
+                                        winnerInput.setAttribute('placeholder', 'Nombre del ganador');
+                                        matchRow.appendChild(winnerCell);
+                                        winnerCell.appendChild(winnerInput);
+
+                                        roundTable.appendChild(matchRow);
+                                    });
+
+                                    const nextButton = document.createElement('button');
+                                    nextButton.textContent = 'Siguiente ronda';
+                                    nextButton.addEventListener('click', function () {
+                                        const winnerInputs = roundTable.querySelectorAll('input');
+                                        let allWinnersEntered = true;
+
+                                        winnerInputs.forEach(function (input) {
+                                            if (input.value.trim() === '') {
+                                                allWinnersEntered = false;
+                                                return;
+                                            }
+                                        });
+
+                                        if (!allWinnersEntered) {
+                                            alert('Debes ingresar el nombre del ganador para cada enfrentamiento.');
+                                            return;
+                                        }
+
+                                        winnerInputs.forEach(function (input, index) {
+                                            const winnerName = input.value.trim();
+                                            const match = roundMatches[index];
+
+                                            if (match[0].name === winnerName) {
+                                                match[0].victories++;
+                                                partidosGanados[match[0].name]++;
+                                            } else if (match[1].name === winnerName) {
+                                                match[1].victories++;
+                                                partidosGanados[match[1].name]++;
+                                            }
+                                        });
+
+                                        roundsDiv.innerHTML = '';
+                                        rankingBody.innerHTML = '';
+
+                                        if (ronda + i + 1 < roundCount) {
+                                            for (let j = 0; j <= i; j++) {
+                                                const roundHeader = document.createElement('h3');
+                                                roundHeader.textContent = 'Ronda ' + (ronda + i + 1 + j);
+                                                roundsDiv.appendChild(roundHeader);
+
+                                                const roundMatches = generarEnfrentamientos(players, partidosGanados, ronda + i + 1 + j);
+
+                                                const roundTable = document.createElement('table');
+                                                roundTable.innerHTML = '<tr><th>Jugador 1</th><th>Jugador 2</th><th>Ganador</th></tr>';
+
+                                                roundMatches.forEach((match) => {
+                                                    const matchRow = document.createElement('tr');
+                                                    matchRow.innerHTML = '<td>' + match[0].name + '</td><td>' + match[1].name + '</td>';
+
+                                                    const winnerCell = document.createElement('td');
+                                                    const winnerInput = document.createElement('input');
+                                                    winnerInput.setAttribute('type', 'text');
+                                                    winnerInput.setAttribute('placeholder', 'Nombre del ganador');
+                                                    matchRow.appendChild(winnerCell);
+                                                    winnerCell.appendChild(winnerInput);
+
+                                                    roundTable.appendChild(matchRow);
+                                                });
+
+                                                const nextButton = document.createElement('button');
+                                                nextButton.textContent = 'Siguiente ronda';
+                                                nextButton.addEventListener('click', function () {
+                                                    const winnerInputs = roundTable.querySelectorAll('input');
+                                                    let allWinnersEntered = true;
+
+                                                    winnerInputs.forEach(function (input) {
+                                                        if (input.value.trim() === '') {
+                                                            allWinnersEntered = false;
+                                                            return;
+                                                        }
+                                                    });
+
+                                                    if (!allWinnersEntered) {
+                                                        alert('Debes ingresar el nombre del ganador para cada enfrentamiento.');
+                                                        return;
+                                                    }
+
+                                                    winnerInputs.forEach(function (input, index) {
+                                                        const winnerName = input.value.trim();
+                                                        const match = roundMatches[index];
+
+                                                        if (match[0].name === winnerName) {
+                                                            match[0].victories++;
+                                                            partidosGanados[match[0].name]++;
+                                                        } else if (match[1].name === winnerName) {
+                                                            match[1].victories++;
+                                                            partidosGanados[match[1].name]++;
+                                                        }
+                                                    });
+
+                                                    roundsDiv.innerHTML = '';
+                                                    rankingBody.innerHTML = '';
+
+                                                    if (ronda + i + 1 + j + 1 === roundCount) {
+                                                                                                                const roundHeader = document.createElement('h3');
+                                                        roundHeader.textContent = 'Ronda ' + (ronda + i + 1 + j + 1);
+                                                        roundsDiv.appendChild(roundHeader);
+
+                                                        const roundMatches = generarEnfrentamientos(players, partidosGanados, ronda + i + 1 + j + 1);
+
+                                                        const roundTable = document.createElement('table');
+                                                        roundTable.innerHTML = '<tr><th>Jugador 1</th><th>Jugador 2</th><th>Ganador</th></tr>';
+
+                                                        roundMatches.forEach((match) => {
+                                                            const matchRow = document.createElement('tr');
+                                                            matchRow.innerHTML = '<td>' + match[0].name + '</td><td>' + match[1].name + '</td>';
+
+                                                            const winnerCell = document.createElement('td');
+                                                            const winnerInput = document.createElement('input');
+                                                            winnerInput.setAttribute('type', 'text');
+                                                            winnerInput.setAttribute('placeholder', 'Nombre del ganador');
+                                                            matchRow.appendChild(winnerCell);
+                                                            winnerCell.appendChild(winnerInput);
+
+                                                            roundTable.appendChild(matchRow);
+                                                        });
+
+                                                        const nextButton = document.createElement('button');
+                                                        nextButton.textContent = 'Finalizar torneo';
+                                                        nextButton.addEventListener('click', function () {
+                                                            const winnerInputs = roundTable.querySelectorAll('input');
+                                                            let allWinnersEntered = true;
+
+                                                            winnerInputs.forEach(function (input) {
+                                                                if (input.value.trim() === '') {
+                                                                    allWinnersEntered = false;
+                                                                    return;
+                                                                }
+                                                            });
+
+                                                            if (!allWinnersEntered) {
+                                                                alert('Debes ingresar el nombre del ganador para cada enfrentamiento.');
+                                                                return;
+                                                            }
+
+                                                            winnerInputs.forEach(function (input, index) {
+                                                                const winnerName = input.value.trim();
+                                                                const match = roundMatches[index];
+
+                                                                if (match[0].name === winnerName) {
+                                                                    match[0].victories++;
+                                                                    partidosGanados[match[0].name]++;
+                                                                } else if (match[1].name === winnerName) {
+                                                                    match[1].victories++;
+                                                                    partidosGanados[match[1].name]++;
+                                                                }
+                                                            });
+
+                                                            roundsDiv.innerHTML = '';
+                                                            rankingBody.innerHTML = '';
+
+                                                            const sortedPlayers = players.sort((a, b) => b.victories - a.victories);
+
+                                                            sortedPlayers.forEach((player, index) => {
+                                                                const row = document.createElement('tr');
+                                                                row.innerHTML = '<td>' + (index + 1) + '</td><td>' + player.name + '</td><td>' + player.victories + '</td>';
+                                                                rankingBody.appendChild(row);
+                                                            });
+                                                        });
+
+                                                        roundsDiv.appendChild(roundTable);
+                                                        roundsDiv.appendChild(nextButton);
+                                                    }
+                                                });
+
+                                                roundsDiv.appendChild(roundTable);
+                                                roundsDiv.appendChild(nextButton);
+                                            }
+                                        }
+                                    });
+
+                                    roundsDiv.appendChild(roundTable);
+                                    roundsDiv.appendChild(nextButton);
+                                }
                             }
                         });
 
-                        roundsDiv.innerHTML = '';
-                        rankingBody.innerHTML = '';
-
-                        if (ronda < roundCount) {
-                            for (let i = 0; i < ronda; i++) {
-                                const roundHeader = document.createElement('h3');
-                                roundHeader.textContent = 'Ronda ' + (i + 1);
-                                roundsDiv.appendChild(roundHeader);
-
-                                const roundTable = document.createElement('table');
-                                roundTable.innerHTML = '<tr><th>Jugador 1</th><th>Jugador 2</th><th>Ganador</th></tr>';
-
-                                const roundMatches = generarEnfrentamientos(players, partidosGanados, i);
-                                roundMatches.forEach((match) => {
-                                    const matchRow = document.createElement('tr');
-                                    matchRow.innerHTML = '<td>' + match[0].name + '</td><td>' + match[1].name + '</td>';
-
-                                    const winnerCell = document.createElement('td');
-                                    const winnerInput = document.createElement('input');
-                                    winnerInput.setAttribute('type', 'text');
-                                    winnerInput.setAttribute('placeholder', 'Nombre del ganador');
-                                    matchRow.appendChild(winnerCell);
-                                    winnerCell.appendChild(winnerInput);
-
-                                    roundTable.appendChild(matchRow);
-                                });
-
-                                roundsDiv.appendChild(roundTable);
-                            }
-                        }
-
-                        const ranking = Object.entries(partidosGanados).sort((a, b) => b[1] - a[1]);
-
-                        ranking.forEach((player, index) => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = '<td>' + (index + 1) + '</td><td>' + player[0] + '</td><td>' + player[1] + '</td>';
-                            rankingBody.appendChild(row);
-                        });
+                        roundsDiv.appendChild(roundTable);
+                        roundsDiv.appendChild(nextButton);
                     }
                 }
 
-                const ranking = Object.entries(partidosGanados).sort((a, b) => b[1] - a[1]);
-
-                ranking.forEach((player, index) => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = '<td>' + (index + 1) + '</td><td>' + player[0] + '</td><td>' + player[1] + '</td>';
-                    rankingBody.appendChild(row);
-                });
+                roundsDiv.appendChild(roundTable);
+                roundsDiv.appendChild(nextButton);
             });
 
             roundsDiv.appendChild(roundTable);
             roundsDiv.appendChild(nextButton);
         }
 
-        function generarEnfrentamientos(jugadores, partidosGanados, ronda) {
-            const enfrentamientos = [];
-            const disponibles = [...jugadores];
+        function generarEnfrentamientos(players, partidosGanados, ronda = 1) {
+            const matches = [];
 
-            for (let i = 0; i < jugadores.length / 2; i++) {
-                const enfrentamiento = [];
-                const jugadoresPosibles = disponibles.filter(jugador => partidosGanados[jugador.name] === ronda - 1);
+            const sortedPlayers = players.sort((a, b) => partidosGanados[a.name] - partidosGanados[b.name]);
 
-                for (let j = 0; j < 2; j++) {
-                    const jugador = jugadoresPosibles[Math.floor(Math.random() * jugadoresPosibles.length)];
-                    enfrentamiento.push(jugador);
-                    disponibles.splice(disponibles.indexOf(jugador), 1);
-                }
+            const matchesCount = Math.floor(sortedPlayers.length / 2);
 
-                enfrentamientos.push(enfrentamiento);
+            for (let i = 0; i < matchesCount; i++) {
+                const player1 = sortedPlayers[i];
+                const player2 = sortedPlayers[i + matchesCount];
+
+                matches.push([player1, player2]);
             }
 
-            return enfrentamientos;
+            return matches;
         }
     </script>
 </body>
 </html>
+
+
