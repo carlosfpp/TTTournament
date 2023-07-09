@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Campeonato de Tenis de Mesa</title>
+    <style>
+        /* Estilos CSS para una apariencia básica */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 20px;
+        }
+        .round {
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Campeonato de Tenis de Mesa</h1>
+        <div id="input-section">
+            <h2>Introduce los nombres de los jugadores:</h2>
+            <div class="form-group">
+                <input type="text" id="player-name" placeholder="Nombre y Apellido">
+                <button onclick="addPlayer()">Agregar jugador</button>
+            </div>
+            <div id="player-list"></div>
+            <button onclick="startTournament()">Iniciar torneo</button>
+        </div>
+        <div id="tournament-section" style="display: none;">
+            <h2>Rondas</h2>
+            <div id="rounds"></div>
+            <h2>Ranking final</h2>
+            <table id="ranking-table">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Jugador</th>
+                        <th>Partidos ganados</th>
+                    </tr>
+                </thead>
+                <tbody id="ranking-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let players = [];
+
+        function addPlayer() {
+            const playerNameInput = document.getElementById('player-name');
+            const playerName = playerNameInput.value.trim();
+
+            if (playerName !== '') {
+                players.push(playerName);
+                playerNameInput.value = '';
+                renderPlayerList();
+            }
+        }
+
+        function renderPlayerList() {
+            const playerListDiv = document.getElementById('player-list');
+            playerListDiv.innerHTML = '';
+
+            players.forEach((player, index) => {
+                const playerItem = document.createElement('div');
+                playerItem.textContent = player;
+                playerListDiv.appendChild(playerItem);
+            });
+        }
+
+        function startTournament() {
+            if (players.length < 2) {
+                alert('Debes ingresar al menos 2 jugadores para iniciar el torneo.');
+                return;
+            }
+
+            document.getElementById('input-section').style.display = 'none';
+            document.getElementById('tournament-section').style.display = 'block';
+
+            const roundsDiv = document.getElementById('rounds');
+            const rankingBody = document.getElementById('ranking-body');
+
+            const roundCount = Math.floor(players.length / 2);
+            const partidosGanados = {};
+
+            for (let i = 0; i < players.length; i++) {
+                partidosGanados[players[i]] = 0;
+            }
+
+            for (let ronda = 1; ronda <= roundCount; ronda++) {
+                const roundHeader = document.createElement('h3');
+                roundHeader.textContent = 'Ronda ' + ronda;
+                roundsDiv.appendChild(roundHeader);
+
+                const roundMatches = generarEnfrentamientos(players, partidosGanados);
+
+                const roundTable = document.createElement('table');
+                roundTable.innerHTML = '<tr><th>Jugador 1</th><th>Jugador 2</th><th>Ganador</th></tr>';
+
+                roundMatches.forEach((match) => {
+                    const matchRow = document.createElement('tr');
+                    matchRow.innerHTML = '<td>' + match[0] + '</td><td>' + match[1] + '</td>';
+
+                    const winnerCell = document.createElement('td');
+                    const winnerInput = document.createElement('input');
+                    winnerInput.setAttribute('type', 'text');
+                    winnerInput.setAttribute('placeholder', 'Nombre del ganador');
+                    matchRow.appendChild(winnerCell);
+                    winnerCell.appendChild(winnerInput);
+
+                    roundTable.appendChild(matchRow);
+                });
+
+                roundsDiv.appendChild(roundTable);
+            }
+
+            const ranking = Object.entries(partidosGanados).sort((a, b) => b[1] - a[1]);
+
+            ranking.forEach((player, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td>' + (index + 1) + '</td><td>' + player[0] + '</td><td>' + player[1] + '</td>';
+                rankingBody.appendChild(row);
+            });
+        }
+
+        function generarEnfrentamientos(jugadores, partidosGanados) {
+            const rondas = Math.floor(jugadores.length / 2);
+            const enfrentamientos = [];
+            const disponibles = [...jugadores];
+
+            for (let i = 0; i < rondas; i++) {
+                const enfrentamiento = [];
+
+                for (let j = 0; j < 2; j++) {
+                    const jugador = seleccionarJugador(disponibles, partidosGanados);
+                    enfrentamiento.push(jugador);
+                    disponibles.splice(disponibles.indexOf(jugador), 1);
+                }
+
+                enfrentamientos.push(enfrentamiento);
+            }
+
+            return enfrentamientos;
+        }
+
+        function seleccionarJugador(disponibles, partidosGanados) {
+            const jugadoresPosibles = disponibles.filter(jugador => partidosGanados[jugador] === Math.min(...Object.values(partidosGanados)));
+            return jugadoresPosibles[Math.floor(Math.random() * jugadoresPosibles.length)];
+        }
+    </script>
+</body>
+</html>
