@@ -78,7 +78,7 @@
             const playerName = playerNameInput.value.trim();
 
             if (playerName !== '') {
-                players.push(playerName);
+                players.push({ name: playerName, victories: 0 });
                 playerNameInput.value = '';
                 renderPlayerList();
             }
@@ -90,7 +90,7 @@
 
             players.forEach((player, index) => {
                 const playerItem = document.createElement('div');
-                playerItem.textContent = player;
+                playerItem.textContent = player.name;
                 playerListDiv.appendChild(playerItem);
             });
         }
@@ -107,12 +107,12 @@
             const roundsDiv = document.getElementById('rounds');
             const rankingBody = document.getElementById('ranking-body');
 
-            const roundCount = Math.floor(players.length / 2);
+            const roundCount = Math.floor(Math.log2(players.length));
             const partidosGanados = {};
 
-            for (let i = 0; i < players.length; i++) {
-                partidosGanados[players[i]] = 0;
-            }
+            players.forEach((player) => {
+                partidosGanados[player.name] = player.victories;
+            });
 
             for (let ronda = 1; ronda <= roundCount; ronda++) {
                 const roundHeader = document.createElement('h3');
@@ -126,7 +126,7 @@
 
                 roundMatches.forEach((match) => {
                     const matchRow = document.createElement('tr');
-                    matchRow.innerHTML = '<td>' + match[0] + '</td><td>' + match[1] + '</td>';
+                    matchRow.innerHTML = '<td>' + match[0].name + '</td><td>' + match[1].name + '</td>';
 
                     const winnerCell = document.createElement('td');
                     const winnerInput = document.createElement('input');
@@ -171,7 +171,7 @@
         }
 
         function seleccionarJugador(disponibles, partidosGanados) {
-            const jugadoresPosibles = disponibles.filter(jugador => partidosGanados[jugador] === Math.min(...Object.values(partidosGanados)));
+            const jugadoresPosibles = disponibles.filter(jugador => partidosGanados[jugador.name] === Math.min(...Object.values(partidosGanados)));
             return jugadoresPosibles[Math.floor(Math.random() * jugadoresPosibles.length)];
         }
     </script>
