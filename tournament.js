@@ -24,7 +24,7 @@ function generateMatches() {
     const playedMatches = [];
 
     // Filtrar jugadores que aún no han ganado partidos en la ronda actual
-    const playersToMatch = players.filter(player => player.wins === currentRound - 1);
+    const playersToMatch = players.filter(player => player.wins === (currentRound - 1));
 
     // Generar los enfrentamientos para la siguiente ronda
     while (playersToMatch.length > 1) {
@@ -60,10 +60,22 @@ function generateMatches() {
 }
 
 function generateNextRound() {
+    if (currentRound > 0) {
+        // Actualizar los ganadores de los partidos en la ronda actual
+        for (const match of matches) {
+            const winnerIndex = winners.findIndex(winner => winner.player === match.player1 || winner.player === match.player2);
+            if (winnerIndex !== -1) {
+                winners[winnerIndex].wins++;
+            }
+        }
+    }
+
     currentRound++;
     matches = generateMatches();
+    winners = [];
     renderTournamentTable();
 }
+
 
 function renderTournamentTable() {
     const tournamentTable = document.getElementById('tournamentTable');
