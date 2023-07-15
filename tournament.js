@@ -81,20 +81,26 @@ function renderTournamentTable() {
     const tournamentTable = document.getElementById('tournamentTable');
     tournamentTable.innerHTML = '';
 
+    if (currentRound === 0) {
+        tournamentTable.innerHTML = '<p>Aún no se ha empezado el torneo.</p>';
+        return;
+    }
+
     tournamentTable.innerHTML = `<h3>Ronda ${currentRound}</h3>`;
 
     if (matches.length === 0 && currentRound > 0) {
         tournamentTable.innerHTML += '<p>No hay más partidos por jugar. Torneo finalizado.</p>';
 
-        // Mostrar los resultados finales
-        tournamentTable.innerHTML += '<h3>Resultados Finales</h3>';
-
+        // Mostrar la clasificación en forma de tabla
+        tournamentTable.innerHTML += '<h3>Clasificación</h3>';
         if (players.length > 0) {
-            tournamentTable.innerHTML += '<ol>';
+            tournamentTable.innerHTML += '<table>';
+            tournamentTable.innerHTML += '<tr><th>Jugador</th><th>Partidos Ganados</th><th>Partidos Jugados</th></tr>';
             for (let i = 0; i < players.length; i++) {
-                tournamentTable.innerHTML += `<li>${players[i].name} - ${players[i].wins} partidos ganados</li>`;
+                const player = players[i];
+                tournamentTable.innerHTML += `<tr><td>${player.name}</td><td>${player.wins}</td><td>${currentRound - 1}</td></tr>`;
             }
-            tournamentTable.innerHTML += '</ol>';
+            tournamentTable.innerHTML += '</table>';
         }
 
         return;
@@ -109,6 +115,7 @@ function renderTournamentTable() {
     }
     tournamentTable.innerHTML += '</ul>';
 }
+
 
 
 function getRandomIndex(max) {
