@@ -94,14 +94,24 @@ function renderTournamentTable() {
         // Mostrar la clasificación en forma de tabla
         tournamentTable.innerHTML += '<h3>Clasificación</h3>';
         if (players.length > 0) {
-            tournamentTable.innerHTML += '<table>';
-            tournamentTable.innerHTML += '<tr><th>Jugador</th><th>Partidos Ganados</th><th>Partidos Jugados</th></tr>';
+            const table = document.createElement('table');
+            const headerRow = document.createElement('tr');
+            headerRow.innerHTML = '<th>Jugador</th><th>Partidos Ganados</th><th>Partidos Jugados</th>';
+            table.appendChild(headerRow);
+
+            const maxWins = Math.max(...players.map(p => p.wins));
+
             for (let i = 0; i < players.length; i++) {
                 const player = players[i];
-                const winnerClass = player.wins === Math.max(...players.map(p => p.wins)) ? 'winner' : '';
-                tournamentTable.innerHTML += `<tr><td class="${winnerClass}">${player.name}</td><td>${player.wins}</td><td>${currentRound - 1}</td></tr>`;
+                const row = document.createElement('tr');
+                if (player.wins === maxWins) {
+                    row.classList.add('winner');
+                }
+                row.innerHTML = `<td>${player.name}</td><td>${player.wins}</td><td>${currentRound - 1}</td>`;
+                table.appendChild(row);
             }
-            tournamentTable.innerHTML += '</table>';
+
+            tournamentTable.appendChild(table);
         }
 
         return;
@@ -116,6 +126,7 @@ function renderTournamentTable() {
     }
     tournamentTable.innerHTML += '</ul>';
 }
+
 
 
 
