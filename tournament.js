@@ -140,8 +140,6 @@ function updateMatchResult(matchIndex, winnerIndex) {
 
     winner.wins++;
 
-    // Ordenar la clasificación en orden descendente según el número de partidos ganados
-    players.sort((a, b) => b.wins - a.wins);
 
     // Actualizar los resultados en la tabla del torneo
     renderTournamentTable();
