@@ -13,9 +13,11 @@ function startTournament() {
 
     document.getElementById('playerNames').disabled = true;
     document.getElementById('tournamentTable').style.display = 'block';
-    generateNextRound(); // Agregamos esta línea para generar la primera ronda después de empezar el torneo
-}
+    generateNextRound();
 
+    // Llamamos a renderTournamentTable() después de generateNextRound()
+    renderTournamentTable();
+}
 
 function generateNextRound() {
     currentRound++;
