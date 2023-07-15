@@ -98,7 +98,8 @@ function renderTournamentTable() {
             tournamentTable.innerHTML += '<tr><th>Jugador</th><th>Partidos Ganados</th><th>Partidos Jugados</th></tr>';
             for (let i = 0; i < players.length; i++) {
                 const player = players[i];
-                tournamentTable.innerHTML += `<tr><td>${player.name}</td><td>${player.wins}</td><td>${currentRound - 1}</td></tr>`;
+                const winnerClass = player.wins === Math.max(...players.map(p => p.wins)) ? 'winner' : '';
+                tournamentTable.innerHTML += `<tr><td class="${winnerClass}">${player.name}</td><td>${player.wins}</td><td>${currentRound - 1}</td></tr>`;
             }
             tournamentTable.innerHTML += '</table>';
         }
