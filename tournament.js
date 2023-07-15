@@ -19,18 +19,14 @@ function startTournament() {
     renderTournamentTable();
 }
 
-function generateNextRound() {
-    currentRound++;
-    matches = generateMatches();
-    renderTournamentTable();
-}
-
 function generateMatches() {
     const matches = [];
     const playedMatches = [];
 
+    // Filtrar jugadores que aún no han ganado partidos en la ronda actual
+    const playersToMatch = players.filter(player => player.wins === currentRound - 1);
+
     // Generar los enfrentamientos para la siguiente ronda
-    const playersToMatch = [...players]; // Hacemos una copia de los jugadores
     while (playersToMatch.length > 1) {
         const player1Index = getRandomIndex(playersToMatch.length);
         const player1 = playersToMatch[player1Index];
@@ -63,42 +59,15 @@ function generateMatches() {
     return matches;
 }
 
-function getRandomIndex(max) {
-    return Math.floor(Math.random() * max);
-}
-
-
-function endTournament() {
-    // Lógica para finalizar el torneo
-    // Aquí puedes determinar al ganador, segundo y tercer lugar basado en el número de victorias.
-
-    // Mostrar los resultados finales
-    renderTournamentTable();
-    document.getElementById('playerNames').disabled = false;
-}
-
-function updateMatchResult(matchIndex, winnerIndex) {
-    // Actualizar los datos del ganador y clasificación
-    const match = matches[matchIndex];
-    const winner = players[winnerIndex];
-
-    winner.wins++;
-
-    // Ordenar la clasificación en orden descendente según el número de partidos ganados
-    players.sort((a, b) => b.wins - a.wins);
-
-    // Actualizar los resultados en la tabla del torneo
+function generateNextRound() {
+    currentRound++;
+    matches = generateMatches();
     renderTournamentTable();
 }
 
 function renderTournamentTable() {
     const tournamentTable = document.getElementById('tournamentTable');
     tournamentTable.innerHTML = '';
-
-    if (currentRound === 0) {
-        tournamentTable.innerHTML = '<p>Aún no se ha empezado el torneo.</p>';
-        return;
-    }
 
     tournamentTable.innerHTML = `<h3>Ronda ${currentRound}</h3>`;
 
@@ -128,3 +97,33 @@ function renderTournamentTable() {
     }
     tournamentTable.innerHTML += '</ul>';
 }
+
+
+function getRandomIndex(max) {
+    return Math.floor(Math.random() * max);
+}
+
+
+function endTournament() {
+    // Lógica para finalizar el torneo
+    // Aquí puedes determinar al ganador, segundo y tercer lugar basado en el número de victorias.
+
+    // Mostrar los resultados finales
+    renderTournamentTable();
+    document.getElementById('playerNames').disabled = false;
+}
+
+function updateMatchResult(matchIndex, winnerIndex) {
+    // Actualizar los datos del ganador y clasificación
+    const match = matches[matchIndex];
+    const winner = players[winnerIndex];
+
+    winner.wins++;
+
+    // Ordenar la clasificación en orden descendente según el número de partidos ganados
+    players.sort((a, b) => b.wins - a.wins);
+
+    // Actualizar los resultados en la tabla del torneo
+    renderTournamentTable();
+}
+
