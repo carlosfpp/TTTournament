@@ -75,8 +75,6 @@ function generateNextRound() {
     winners = [];
     renderTournamentTable();
 }
-
-
 function renderTournamentTable() {
     const tournamentTable = document.getElementById('tournamentTable');
     tournamentTable.innerHTML = '';
@@ -95,10 +93,7 @@ function renderTournamentTable() {
         tournamentTable.innerHTML += '<h3>Clasificación</h3>';
         if (players.length > 0) {
             const table = document.createElement('table');
-            const headerRow = document.createElement('tr');
-            headerRow.innerHTML = '<th>Jugador</th><th>Partidos Ganados</th><th>Partidos Jugados</th>';
-            table.appendChild(headerRow);
-
+            table.innerHTML = '<tr><th>Jugador</th><th>Partidos Ganados</th><th>Partidos Jugados</th></tr>';
             const maxWins = Math.max(...players.map(p => p.wins));
 
             for (let i = 0; i < players.length; i++) {
@@ -126,8 +121,6 @@ function renderTournamentTable() {
     }
     tournamentTable.innerHTML += '</ul>';
 }
-
-
 
 
 function getRandomIndex(max) {
