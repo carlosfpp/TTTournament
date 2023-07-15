@@ -26,12 +26,47 @@ function generateNextRound() {
 }
 
 function generateMatches() {
-    // Lógica para generar los partidos de la ronda actual
-    // Aquí puedes implementar tu algoritmo para generar los enfrentamientos aleatorios
-    // y evitar enfrentamientos entre jugadores que ya hayan jugado antes.
+    const matches = [];
+    const playedMatches = [];
 
-    return []; // Devolver la lista de partidos generados
+    // Generar los enfrentamientos para la siguiente ronda
+    const playersToMatch = [...players]; // Hacemos una copia de los jugadores
+    while (playersToMatch.length > 1) {
+        const player1Index = getRandomIndex(playersToMatch.length);
+        const player1 = playersToMatch[player1Index];
+        playersToMatch.splice(player1Index, 1);
+
+        const player2Index = getRandomIndex(playersToMatch.length);
+        const player2 = playersToMatch[player2Index];
+        playersToMatch.splice(player2Index, 1);
+
+        matches.push({ player1, player2 });
+        playedMatches.push({ player1, player2 });
+    }
+
+    // Comprobar si hay enfrentamientos anteriores y evitarlos si es posible
+    for (const match of matches) {
+        const hasPlayedBefore = playedMatches.find(
+            playedMatch =>
+                (playedMatch.player1 === match.player1 && playedMatch.player2 === match.player2) ||
+                (playedMatch.player1 === match.player2 && playedMatch.player2 === match.player1)
+        );
+
+        if (hasPlayedBefore) {
+            // Intercambiar los jugadores para evitar el enfrentamiento repetido
+            const temp = match.player1;
+            match.player1 = match.player2;
+            match.player2 = temp;
+        }
+    }
+
+    return matches;
 }
+
+function getRandomIndex(max) {
+    return Math.floor(Math.random() * max);
+}
+
 
 function endTournament() {
     // Lógica para finalizar el torneo
