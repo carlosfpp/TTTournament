@@ -76,6 +76,37 @@ function generateNextRound() {
     renderTournamentTable();
 }
 
+
+
+function getRandomIndex(max) {
+    return Math.floor(Math.random() * max);
+}
+
+
+function endTournament() {
+    // Lógica para finalizar el torneo
+    // Aquí puedes determinar al ganador, segundo y tercer lugar basado en el número de victorias.
+
+    // Mostrar los resultados finales
+    renderTournamentTable();
+    document.getElementById('playerNames').disabled = false;
+}
+
+function updateMatchResult(matchIndex, winnerIndex) {
+    const match = matches[matchIndex];
+    const winner = winnerIndex === 0 ? match.player1 : match.player2;
+
+    winner.wins++;
+
+    // Agregar la clase "winner" al jugador ganador en la fila del enfrentamiento
+    const matchElement = document.getElementById(`match${matchIndex}`);
+    const winnerElement = winnerIndex === 0 ? matchElement.querySelector('.player1') : matchElement.querySelector('.player2');
+    winnerElement.classList.add('winner');
+
+    // Actualizar los resultados en la tabla del torneo
+    renderTournamentTable();
+}
+
 function renderTournamentTable() {
     const tournamentTable = document.getElementById('tournamentTable');
     tournamentTable.innerHTML = '';
@@ -94,18 +125,7 @@ function renderTournamentTable() {
         tournamentTable.innerHTML += '<h3>Clasificación</h3>';
         if (players.length > 0) {
             const table = document.createElement('table');
-            const headerRow = document.createElement('tr');
-            const nameHeader = document.createElement('th');
-            nameHeader.innerText = 'Jugador';
-            const winsHeader = document.createElement('th');
-            winsHeader.innerText = 'Partidos Ganados';
-            const playedHeader = document.createElement('th');
-            playedHeader.innerText = 'Partidos Jugados';
-            headerRow.appendChild(nameHeader);
-            headerRow.appendChild(winsHeader);
-            headerRow.appendChild(playedHeader);
-            table.appendChild(headerRow);
-
+            table.innerHTML = '<tr><th>Jugador</th><th>Partidos Ganados</th><th>Partidos Jugados</th></tr>';
             const maxWins = Math.max(...players.map(p => p.wins));
 
             for (let i = 0; i < players.length; i++) {
@@ -114,15 +134,7 @@ function renderTournamentTable() {
                 if (player.wins === maxWins) {
                     row.classList.add('winner');
                 }
-                const nameCell = document.createElement('td');
-                nameCell.innerText = player.name;
-                const winsCell = document.createElement('td');
-                winsCell.innerText = player.wins;
-                const playedCell = document.createElement('td');
-                playedCell.innerText = currentRound - 1;
-                row.appendChild(nameCell);
-                row.appendChild(winsCell);
-                row.appendChild(playedCell);
+                row.innerHTML = `<td>${player.name}</td><td>${player.wins}</td><td>${currentRound - 1}</td>`;
                 table.appendChild(row);
             }
 
@@ -134,38 +146,17 @@ function renderTournamentTable() {
 
     tournamentTable.innerHTML += '<ul>';
     for (let i = 0; i < matches.length; i++) {
-        tournamentTable.innerHTML += `<li>${matches[i].player1.name} vs ${matches[i].player2.name} 
-                                        <button onclick="updateMatchResult(${i}, 0)">Gana ${matches[i].player1.name}</button>
-                                        <button onclick="updateMatchResult(${i}, 1)">Gana ${matches[i].player2.name}</button>
+        const match = matches[i];
+        const winnerClass = winners[i] ? 'winner' : '';
+
+        tournamentTable.innerHTML += `<li id="match${i}">
+                                        <span class="player1 ${winnerClass}">${match.player1.name}</span> vs
+                                        <span class="player2 ${winnerClass}">${match.player2.name}</span>
+                                        <button onclick="updateMatchResult(${i}, 0)">Gana ${match.player1.name}</button>
+                                        <button onclick="updateMatchResult(${i}, 1)">Gana ${match.player2.name}</button>
                                       </li>`;
     }
     tournamentTable.innerHTML += '</ul>';
 }
 
-
-function getRandomIndex(max) {
-    return Math.floor(Math.random() * max);
-}
-
-
-function endTournament() {
-    // Lógica para finalizar el torneo
-    // Aquí puedes determinar al ganador, segundo y tercer lugar basado en el número de victorias.
-
-    // Mostrar los resultados finales
-    renderTournamentTable();
-    document.getElementById('playerNames').disabled = false;
-}
-
-function updateMatchResult(matchIndex, winnerIndex) {
-    // Actualizar los datos del ganador y clasificación
-    const match = matches[matchIndex];
-    const winner = players[winnerIndex];
-
-    winner.wins++;
-
-
-    // Actualizar los resultados en la tabla del torneo
-    renderTournamentTable();
-}
 
