@@ -75,6 +75,7 @@ function generateNextRound() {
     winners = [];
     renderTournamentTable();
 }
+
 function renderTournamentTable() {
     const tournamentTable = document.getElementById('tournamentTable');
     tournamentTable.innerHTML = '';
@@ -93,7 +94,18 @@ function renderTournamentTable() {
         tournamentTable.innerHTML += '<h3>Clasificación</h3>';
         if (players.length > 0) {
             const table = document.createElement('table');
-            table.innerHTML = '<tr><th>Jugador</th><th>Partidos Ganados</th><th>Partidos Jugados</th></tr>';
+            const headerRow = document.createElement('tr');
+            const nameHeader = document.createElement('th');
+            nameHeader.innerText = 'Jugador';
+            const winsHeader = document.createElement('th');
+            winsHeader.innerText = 'Partidos Ganados';
+            const playedHeader = document.createElement('th');
+            playedHeader.innerText = 'Partidos Jugados';
+            headerRow.appendChild(nameHeader);
+            headerRow.appendChild(winsHeader);
+            headerRow.appendChild(playedHeader);
+            table.appendChild(headerRow);
+
             const maxWins = Math.max(...players.map(p => p.wins));
 
             for (let i = 0; i < players.length; i++) {
@@ -102,7 +114,15 @@ function renderTournamentTable() {
                 if (player.wins === maxWins) {
                     row.classList.add('winner');
                 }
-                row.innerHTML = `<td>${player.name}</td><td>${player.wins}</td><td>${currentRound - 1}</td>`;
+                const nameCell = document.createElement('td');
+                nameCell.innerText = player.name;
+                const winsCell = document.createElement('td');
+                winsCell.innerText = player.wins;
+                const playedCell = document.createElement('td');
+                playedCell.innerText = currentRound - 1;
+                row.appendChild(nameCell);
+                row.appendChild(winsCell);
+                row.appendChild(playedCell);
                 table.appendChild(row);
             }
 
