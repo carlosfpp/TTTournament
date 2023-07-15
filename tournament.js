@@ -98,11 +98,6 @@ function updateMatchResult(matchIndex, winnerIndex) {
 
     winner.wins++;
 
-    // Agregar la clase "winner" al jugador ganador en la fila del enfrentamiento
-    const matchElement = document.getElementById(`match${matchIndex}`);
-    const winnerElement = winnerIndex === 0 ? matchElement.querySelector('.player1') : matchElement.querySelector('.player2');
-    winnerElement.classList.add('winner');
-
     // Actualizar los resultados en la tabla del torneo
     renderTournamentTable();
 }
@@ -147,16 +142,19 @@ function renderTournamentTable() {
     tournamentTable.innerHTML += '<ul>';
     for (let i = 0; i < matches.length; i++) {
         const match = matches[i];
-        const winnerClass = winners[i] ? 'winner' : '';
+        const winnerIndex = winners.findIndex(winner => winner.matchIndex === i);
+        const isPlayer1Winner = winnerIndex !== -1 && winners[winnerIndex].winnerIndex === 0;
+        const isPlayer2Winner = winnerIndex !== -1 && winners[winnerIndex].winnerIndex === 1;
 
-        tournamentTable.innerHTML += `<li id="match${i}">
-                                        <span class="player1 ${winnerClass}">${match.player1.name}</span> vs
-                                        <span class="player2 ${winnerClass}">${match.player2.name}</span>
+        tournamentTable.innerHTML += `<li>
+                                        <span class="${isPlayer1Winner ? 'winner' : ''}">${match.player1.name}</span> vs
+                                        <span class="${isPlayer2Winner ? 'winner' : ''}">${match.player2.name}</span>
                                         <button onclick="updateMatchResult(${i}, 0)">Gana ${match.player1.name}</button>
                                         <button onclick="updateMatchResult(${i}, 1)">Gana ${match.player2.name}</button>
                                       </li>`;
     }
     tournamentTable.innerHTML += '</ul>';
 }
+
 
 
